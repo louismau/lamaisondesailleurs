@@ -8,13 +8,14 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
+import Img from "gatsby-image"
 
-import Header from "./header"
 import Navbar from './navbar'
+import SubNavbar from './subnavbar'
 import "./layout.scss"
 
 
-const Layout = ({ children }) => {
+const Layout = ({ children, data }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -25,10 +26,22 @@ const Layout = ({ children }) => {
     }
   `)
 
+  const bgImage = graphql`
+    query {
+      file(relativePath: { eq: "images/gatsby-astronaut.png" }) {
+        childImageSharp {
+          fluid {
+            ...GatsbyImageSharpFluid
+          }
+        }
+      }
+    }
+  `
+
   return (
     <>
       <Navbar/>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
+      <SubNavbar/>
       <div
         style={{
           margin: `0 auto`,
@@ -36,6 +49,7 @@ const Layout = ({ children }) => {
           padding: `0 1.0875rem 1.45rem`,
         }}
       >
+        <Img fluid={data.file.childImageSharp.fluid} alt="Gatsby logo" />
         <main>{children}</main>
         <footer style={{
           marginTop: `2rem`
